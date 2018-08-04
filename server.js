@@ -33,15 +33,6 @@ app.get('/', function(req, res){
 	res.render('index');
 });
 
-app.post('/game', function(req, res){
-	res.redirect('/game');
-});
-
-app.get('/game', function(req, res){
-	res.render('game');
-});
-
-
-server.listen(3000, function () {
+server.listen(8081, function () {
   console.log(`Listening on ${server.address().port}`);
 });
