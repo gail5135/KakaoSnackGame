@@ -1,0 +1,25 @@
+{
+  "name": "kakaosnackgame",
+  "version": "1.0.0",
+  "description": "kakao HTML5 game",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gail5135/KakaoSnackGame.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gail5135/KakaoSnackGame/issues"
+  },
+  "homepage": "https://github.com/gail5135/KakaoSnackGame#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "mysql": "^2.16.0",
+    "pug": "^2.0.3"
+  }
+}
