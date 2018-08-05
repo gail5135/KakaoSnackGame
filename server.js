@@ -13,10 +13,6 @@ if (app.get('env') === 'development') {
 	app.locals.pretty = true;
 }
 
-if (app.get('env') === 'development') {
-	app.locals.pretty = true;
-}
-
 var conn = mysql.createConnection({
 	host: "aacy9rmotsalwh.c30xg8pih1rj.us-east-2.rds.amazonaws.com",
 	user: "root",
@@ -31,6 +27,34 @@ conn.connect(function(err) {
 
 app.get('/', function(req, res){
 	res.render('index');
+});
+
+app.post('/data/:method', function(req, res){
+	// var user = req.body.user;
+	// var sql = 'SELECT user, score FROM ranking ORDER BY score DESC LIMIT 3';
+	var method = req.params.method;
+	if(method === 'add'){
+		var score = req.body.score;
+		var sql = `INSERT INTO cat_ranking (user, score, cat) VALUES ('TEST', ?, 0)`;
+		conn.query(sql, [score], function(err, result, fields){
+			if(err){
+				console.log(err);
+			} else {
+				console.log('Inserted score:', score);
+			}
+		});
+	}
+	var sql = `SELECT MAX(score) FROM cat_ranking`;
+	conn.query(sql, function(err, results, fields){
+		if(err){
+			console.log(err);
+		} else {
+			var o = JSON.parse(JSON.stringify(results))[0];
+			var bestScore = o["MAX(score)"];
+			res.type('json');
+			res.json({ bestScore: bestScore });
+		}
+	});
 });
 
 server.listen(8081, function () {
