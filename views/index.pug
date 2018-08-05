@@ -1,13 +1,15 @@
 doctype html
 html
 	head
-		style(type='text/css').
-			body {
-				background: #000000;
-				padding:0px;
-				margin:0px;
-			}
-		script(src='js/phaser.min.js')
-		script(src='js/HealthBar.standalone.js')
-		script(src='js/game.js')
+		meta(charset='utf-8')
+		title KAKAO HTML5 SNACK GAME
+
+		meta(name="viewport" content="width=device-width, user-scalable=no")
 	body
+		div(style="text-align:center; padding-top:4%;")
+			h1 왕냥왕냥
+			form(action='/' method='post')
+				p
+					input(type='text' name='user' placeholder='username' style='font-size: 30pt; width: 200px; height: 50px')
+				p
+					input(type='submit' value='Play!' style='width: 200px; height: 45px')

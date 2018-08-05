@@ -1,0 +1,15 @@
+doctype html
+html
+	head
+		style(type='text/css').
+			body {
+				background: #000000;
+				padding:0px;
+				margin:0px;
+			}
+		script(src='js/phaser.min.js')
+		script(src='js/HealthBar.standalone.js')
+		script(src='js/game.js')
+		script(type='text/javascript').
+			var user_info = !{JSON.stringify(user_info)}
+	body
