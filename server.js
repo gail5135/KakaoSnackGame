@@ -4,6 +4,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var server = require('http').Server(app);
 
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/public'));
 app.set('views', './views');
@@ -57,20 +58,21 @@ app.post('/', function(req, res){
 	});
 });
 
-// POST request about ranking
 app.post('/addScore', function(req, res){
-	var userId = parseInt(req.body.userId);
-	var userScore = parseInt(req.body.userScore);
-	var sql = `UPDATE user_info SET best_score = IF (? > best_score, ?, best_score) WHERE id=?`;
-	if(userScore){
-		conn.query(sql, [userScore, userScore, userId], function(err, result, fields){
-			if(err){
-				console.log(err);
-			} else {
-				console.log('UPDATE', userId, userScore);
-			}
-		});
-	}
+	var json = req.body;
+	var sql =	`UPDATE user_info SET
+					best_score = IF (? > best_score, ?, best_score),
+					lock_1 = IF (? > lock_1, 1, lock_1),
+					lock_2 = IF (? > lock_2, 1, lock_2),
+					lock_3 = IF (? > lock_3, 1, lock_3)
+					WHERE id=?`;
+	conn.query(sql, [json.best_score, json.best_score, json.lock_1, json.lock_2, json.lock_3, json.id], function(err, result, fields){
+		if(err){
+			console.log(err);
+		} else {
+			console.log('UPDATED');
+		}
+	});
 });
 
 // POST 'getRanking'

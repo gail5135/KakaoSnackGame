@@ -683,6 +683,7 @@ unlockScreen.prototype = {
             nyangGates.anchor.set(0.5);
             nyangGates.inputEnabled = true;
             unlockPopUpFlag++;
+            user_info.lock_1 = 1;
             nyangGates.events.onInputDown.add(function(){
                 unlockPopUpFlag--;
                 nyangGates.destroy();
@@ -696,6 +697,7 @@ unlockScreen.prototype = {
             strongCat.anchor.set(0.5);
             strongCat.inputEnabled = true;
             unlockPopUpFlag++;
+            user_info.lock_2 = 1;
             strongCat.events.onInputDown.add(function(){
                 unlockPopUpFlag--;
                 strongCat.destroy();
@@ -709,6 +711,7 @@ unlockScreen.prototype = {
             rapidCat.anchor.set(0.5);
             rapidCat.inputEnabled = true;
             unlockPopUpFlag++;
+            user_info.lock_3 = 1;
             rapidCat.events.onInputDown.add(function(){
                 unlockPopUpFlag--;
                 rapidCat.destroy();
@@ -769,15 +772,14 @@ gameOverScreen.prototype = {
         rankText_4.alignIn(rankBox_4, Phaser.RIGHT, 0, 0);
         rankText_4.tint = 0x3C1E1E;
 
-
     },
     startGame: function(){
         game.state.start("TitleScreen");
     },
     sendRequest: function () {
         httpRequest.open('POST', '/addScore');
-        httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        httpRequest.send('userId=' + user_info.id +'&userScore=' + score);
+        httpRequest.setRequestHeader('Content-Type', 'application/json');
+        httpRequest.send(JSON.stringify(user_info));
     }
 }
 
