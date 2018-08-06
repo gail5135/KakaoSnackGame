@@ -15,11 +15,9 @@ if (app.get('env') === 'development') {
 
 // CONNECT DB
 var conn = mysql.createConnection({
-	// host: "aacy9rmotsalwh.c30xg8pih1rj.us-east-2.rds.amazonaws.com",
-	host: "localhost",
+	host: "aacy9rmotsalwh.c30xg8pih1rj.us-east-2.rds.amazonaws.com",
 	user: "root",
-	// password: "19940106"
-	password: "bb0502",
+	password: "19940106",
 	database: 'game_data'
 });
 conn.connect(function(err) {
@@ -69,34 +67,6 @@ app.get('/debug', function(req, res){
 	});
 });
 
-
-app.post('/data/:method', function(req, res){
-	// var user = req.body.user;
-	// var sql = 'SELECT user, score FROM ranking ORDER BY score DESC LIMIT 3';
-	var method = req.params.method;
-	if(method === 'add'){
-		var score = req.body.score;
-		var sql = `INSERT INTO user_info (user, score, cat) VALUES ('TEST', ?, 0)`;
-		conn.query(sql, [score], function(err, result, fields){
-			if(err){
-				console.log(err);
-			} else {
-				console.log('Inserted score:', score);
-			}
-		});
-	}
-	var sql = `SELECT * FROM user_info WHERE user='user_name'`;
-	conn.query(sql, function(err, results, fields){
-		if(err){
-			console.log(err);
-		} else {
-			var o = JSON.parse(JSON.stringify(results))[0];
-			var bestScore = o["MAX(score)"];
-			res.type('json');
-			res.json({ bestScore: bestScore });
-		}
-	});
-});
 
 
 // TEST
