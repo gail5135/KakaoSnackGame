@@ -1,10 +1,49 @@
 doctype html
 html
-    head
-        meta(charset='utf-8')
-        title TEST SPACE
-        script(type='text/javascript').
-            var user_info = !{JSON.stringify(user_info)}
+	head
+		meta(charset='utf-8')
+		title TEST SPACE
 
-    body
+	body
+		button(onclick="myFunction()" style='width: 800px; height: 300px') Click Me
 
+		script.
+			var httpRequest;
+			var userId = 5;
+			var score = 10;
+			var result;
+			function myFunction() {
+				httpRequest = new XMLHttpRequest();
+				if(!httpRequest) {
+					alert('Not Connected!');
+					return false;
+				}
+				sendRequest();
+			}
+
+			function request() {
+				httpRequest.open('POST', '/addScore');
+				httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				httpRequest.send('userId=' + userId.toString() +'&userScore=' + score.toString());
+			}
+
+			function request_RANK() {
+				httpRequest.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						result = JSON.parse(this.responseText);
+					}
+				}
+				httpRequest.open('POST', '/getRanking');
+				httpRequest.send();
+			}
+
+			function sendRequest() {
+				httpRequest.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						result = JSON.parse(this.responseText);
+					}
+				}
+				httpRequest.open('POST', '/ranking');
+				httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+				httpRequest.send('userId=' + userId.toString() +'&userScore=' + score.toString());
+			}
