@@ -25,8 +25,6 @@ conn.connect(function(err) {
 	console.log('DB Connected!');
 });
 
-
-
 // Render index page
 app.get('/', function(req, res){
 	res.render('index');

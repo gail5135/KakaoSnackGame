@@ -16,7 +16,6 @@ var targetSpeed = 300;
 var targetSpeedCounter = 15;
 var targetPool = [];
 
-
 var unlockFlagArray = [0, 0, 0];
 
 // added
@@ -24,6 +23,7 @@ var httpRequest;
 var hpValue;
 var healthFlag;
 var ranking = [];
+var selectedCat;
 
 window.onload = function() {
     var width = 720;
@@ -135,6 +135,8 @@ preload.prototype = {
         game.load.image("unlockPopUp_RapidCat", "assets/sprites/Unlock/UnlockPopUp_RapidCat.png");
         game.load.image("unlockPopUp_StrongCat", "assets/sprites/Unlock/UnlockPopUp_StrongCat.png");
         game.load.spritesheet("unlockPopUp", "assets/sprites/Unlock/UnlockPopUp.png", 510, 570, 3);
+
+        game.load.spritesheet("catBack", "assets/sprites/cat/CatBackSet.png", 265, 384, 4);
 
         game.load.bitmapFont("font", "assets/fonts/font.png", "assets/fonts/font.fnt");
         game.load.bitmapFont("DungGeunMo", "assets/fonts/DungGeunMo.png", "assets/fonts/DungGeunMo.fnt");
@@ -295,6 +297,7 @@ selectPage.prototype = {
         var frames = [fishCat, rapidCat, strongCat, nyangGates];
         var startEnable = [1, user_info.lock_1, user_info.lock_2, user_info.lock_3];
         var frame = 0;
+        selectedCat = frame;
 
         frames.forEach(function(element){
             element.visible = false;
@@ -316,6 +319,7 @@ selectPage.prototype = {
             } else {
                 frame--;
             }
+            selectedCat = frame;
             frames[frame].visible = !frames[frame].visible;
             select.frame = startEnable[frame];
         }, this);
@@ -329,6 +333,7 @@ selectPage.prototype = {
             } else {
                 frame++;
             }
+            selectedCat = frame;
             frames[frame].visible = !frames[frame].visible;
             select.frame = startEnable[frame];
         }, this);
@@ -384,8 +389,19 @@ playGame.prototype = {
 
         var sprite = game.add.sprite(0, 0, 'hpBar');
 
-        // Cat speed variable
+
+
+
+        // Cat ability base
         this.speedRate = 15000;
+
+        if(selectedCat === 2){  // StrongCat ablility
+            this.speedRate = 20000;
+        }
+
+
+
+
 
         // HPBar tween (scale)
         this.hpTween = game.add.tween(hpBox.scale).to( { x: 0 }, this.speedRate * hpBox.scale.x, Phaser.Easing.Linear.None, true);
@@ -408,7 +424,7 @@ playGame.prototype = {
 		moveRightButton.anchor.x = 0.55;
 
         // Cat configuration
-        cat = game.add.sprite(0, game.height - 200, "fishCat_back");
+        cat = game.add.sprite(0, game.height - 200, "catBack", selectedCat);
         cat.scale.set(0.6);
         cat.positions = [laneWidth/2 + lineWidth, laneWidth + laneWidth/2 + lineWidth, laneWidth*2 + laneWidth/2 + lineWidth];
         cat.anchor.set(0.5);
