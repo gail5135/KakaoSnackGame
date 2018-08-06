@@ -59,12 +59,42 @@ app.post('/', function(req, res){
 	});
 });
 
+// POST request about ranking
+app.post('/addScore', function(req, res){
+	var userId = parseInt(req.body.userId);
+	var userScore = parseInt(req.body.userScore);
+	var sql = `UPDATE user_info SET best_score = IF (? > best_score, ?, best_score) WHERE id=?`;
+	if(userScore){
+		conn.query(sql, [userScore, userScore, userId], function(err, result, fields){
+			if(err){
+				console.log(err);
+			} else {
+				console.log('UPDATE', userId, userScore);
+			}
+		});
+	}
+});
+
+// POST 'getRanking'
+app.post('/getRanking', function(req, res){
+	var sql = `SELECT best_score FROM user_info ORDER BY best_score DESC LIMIT 4`;
+	conn.query(sql, function(err, result, fields){
+		if(err){
+			console.log(err);
+		} else {
+			console.log(result);
+			res.send(result);
+		}
+	});
+});
+
 // TEST GET
 app.get('/debug', function(req, res){
 	var sql = `SELECT * FROM user_info WHERE user=?`;
-	conn.query(sql, [ 'onnoo' ], function(err, results, fields){
-		res.render('game', { user_info: results[0] });
-	});
+	// conn.query(sql, [ 'onnoo' ], function(err, results, fields){
+	// 	res.render('test', { user_info: results[0] });
+	// });
+	res.render('test');
 });
 
 

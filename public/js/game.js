@@ -15,13 +15,15 @@ var targetDelay = 1300;
 var targetSpeed = 300;
 var targetSpeedCounter = 15;
 var targetPool = [];
-var healthBar;
-var healthFlag;
+
+
 var unlockFlagArray = [0, 0, 0];
 
 // added
 var httpRequest;
-var bestScore;
+var hpValue;
+var healthFlag;
+var ranking = [];
 
 window.onload = function() {
     var width = 720;
@@ -62,25 +64,14 @@ boot.prototype = {
         if(!httpRequest) {
             alert('Not Connected!');
             return false;
-        } else {
-            // alert('Flag 1');
         }
-    },
-    sendRequest: function () {
-        httpRequest.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                var o = JSON.parse(this.responseText);
-                bestScore = o.bestScore;
-            }
-        }
-        httpRequest.open('POST', '/data/get');
-        httpRequest.send();
-    },
+    }
 }
 
 var preload = function(game){};
 preload.prototype = {
 	preload: function(){
+        this.sendRequest();
         var loadingBar = this.add.sprite(game.width / 2, game.height / 2, "loading");
         loadingBar.anchor.setTo(0.5);
         game.load.setPreloadSprite(loadingBar);
@@ -113,7 +104,6 @@ preload.prototype = {
         game.load.image("rapidCat_back", "assets/sprites/cat/RapidCat_back.png");
         game.load.image("strongCat_back", "assets/sprites/cat/StrongCat_back.png");
 
-        
         game.load.image("catnipFake", "assets/sprites/Catnip/Catnip_Fake.png");
         game.load.image("catnipGold", "assets/sprites/Catnip/Catnip_Gold.png");
         game.load.image("catnipGood", "assets/sprites/Catnip/Catnip_Good.png");
@@ -139,11 +129,11 @@ preload.prototype = {
         game.load.image("selectCursor", "assets/sprites/Choice/SelectCursor.png");
         game.load.image("rankingBox", "assets/sprites/ranking.png");
         game.load.image("retryButton", "assets/sprites/Retry.png");
+        game.load.image("hpBar", "assets/sprites/hpBar.png");
+
         game.load.image("unlockPopUp_NyangGates", "assets/sprites/Unlock/UnlockPopUp_NyangGates.png");
         game.load.image("unlockPopUp_RapidCat", "assets/sprites/Unlock/UnlockPopUp_RapidCat.png");
         game.load.image("unlockPopUp_StrongCat", "assets/sprites/Unlock/UnlockPopUp_StrongCat.png");
-        
-
         game.load.spritesheet("unlockPopUp", "assets/sprites/Unlock/UnlockPopUp.png", 510, 570, 3);
 
         game.load.bitmapFont("font", "assets/fonts/font.png", "assets/fonts/font.fnt");
@@ -152,6 +142,18 @@ preload.prototype = {
   	create: function(){
 		game.state.start("Prologue");
 	},
+    sendRequest: function () {
+        httpRequest.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                var data = JSON.parse(this.responseText);
+                data.forEach(function(e){
+                    ranking.push(e.best_score);
+                });
+            }
+        }
+        httpRequest.open('POST', '/getRanking');
+        httpRequest.send();
+    }
 };
 
 var prologue = function(game){};
@@ -282,8 +284,6 @@ howToPlaySecond.prototype = {
     }
 }
 
-// game.state.add("SelectPage", selectPage);
-
 var selectPage = function(game){};
 selectPage.prototype = {
     create: function(){
@@ -347,12 +347,9 @@ selectPage.prototype = {
 var playGame = function(game){};
 playGame.prototype = {
     create: function(){
-        // HealthItemFlag
-        
-        // Ingame score
-        score = 30;
-
-        healthFlag = 100;
+        // Initialize
+        score = 0;
+        healthFlag = 1;
 
         // ItemPool        
         targetPool = [];
@@ -370,17 +367,31 @@ playGame.prototype = {
         this.scoreText = game.add.bitmapText(game.width / 2, 40 , "font", "0", 120)
         this.scoreText.anchor.x = 0.5;
 
-        // HP bar
-        healthBar = new HealthBar(this.game, {x: game.width / 2 , y: 20});
-        healthBar.setBarColor("#ffffff");
-        // HP LOOP
-        var timer = setInterval(function(){
-            healthBar.setPercent(healthFlag);
-            healthFlag -= 1;
-            if(healthFlag < 0){
-                clearInterval(timer);
-            }
-        }, 1000);   // 1000ms = 1s
+        // HP Configuration
+        var hpBoxBg = game.add.graphics(174, 140);
+        hpBoxBg.beginFill(0xffffff, 1);
+        hpBoxBg.drawRect(0, 0, 520, 30);
+        hpBoxBg.endFill();
+        hpBoxBg.anchor.setTo(0, 0.5);
+
+        this.hpBox = game.add.graphics(174, 140);
+        var hpBox = this.hpBox;
+        this.hpBox.scale.x = 1;
+        hpBox.beginFill(0xff0000, 1);
+        hpBox.drawRect(0, 0, 520, 30);
+        hpBox.endFill();
+        hpBox.anchor.setTo(0, 0.5);
+
+        var sprite = game.add.sprite(0, 0, 'hpBar');
+
+        // Cat speed variable
+        this.speedRate = 15000;
+
+        // HPBar tween (scale)
+        this.hpTween = game.add.tween(hpBox.scale).to( { x: 0 }, this.speedRate * hpBox.scale.x, Phaser.Easing.Linear.None, true);
+        this.hpTween.onComplete.addOnce(function(){
+            console.log('Comp HP :', hpBox.scale.x);
+        }, this);
 
         // Add Class
         classSet = game.add.sprite(game.width / 2, game.height-50, "classSet");
@@ -388,15 +399,13 @@ playGame.prototype = {
         classSet.scale.set(1.2);
         tween = game.add.tween(classSet);
             
-
         // Move Side Button
         var moveLeftButton = game.add.button(laneWidth/2, game.height - 120, "leftButton", this.moveLeftCat);
         moveLeftButton.scale.set(0.2);
         moveLeftButton.anchor.x = 0.45;
         var moveRightButton = game.add.button((laneWidth*2) + (lineWidth)*2 +(laneWidth/2), game.height - 120, "rightButton", this.moveRightCat);
         moveRightButton.scale.set(0.2);
-        moveRightButton.anchor.x = 0.55;
-
+		moveRightButton.anchor.x = 0.55;
 
         // Cat configuration
         cat = game.add.sprite(0, game.height - 200, "fishCat_back");
@@ -581,21 +590,26 @@ playGame.prototype = {
             }
             else if(t.attr == items[2]){
                 t.destroy();
-                healthFlag += 40;
-                ++unlockFlagArray[1];
-                if(healthFlag > 100){
-                    healthFlag = 100;
-                }
+				++unlockFlagArray[1];
+                this.hpTween.stop(true);
+                game.add.tween(this.hpBox.scale).to( { x: this.hpBox.scale.x + 0.2}, 300, Phaser.Easing.Linear.None, true, 0).onComplete.addOnce(function(){
+                    this.hpTween = game.add.tween(this.hpBox.scale).to( { x: 0 }, this.speedRate * this.hpBox.scale.x, Phaser.Easing.Linear.None, true);
+                }, this);
             }
         }, null, this);
 
         // GameOver trigger
-        if(healthFlag < 0){
+        if(!(this.hpBox.scale.x > 0)){
             this.timeOver(cat);
         }
     },
 
     timeOver: function(c){
+
+        if(score > user_info.best_score){
+            user_info.best_score = score;
+        }
+        
         // TimeOver Events
         if(score == 222){
             unlockFlagArray[0] = 222;
@@ -692,7 +706,14 @@ unlockScreen.prototype = {
 
 var gameOverScreen = function(game){};
 gameOverScreen.prototype = {
-     create: function(){
+    preload: function(){
+        this.sendRequest();
+        if(score > ranking[3]){
+            ranking.push(score);
+            ranking.sort(function(a, b){return b-a});
+        }
+    },
+    create: function(){
         // Background
         var sprite = game.add.sprite(0, -463, 'prologues', 0);
         var startBt = game.add.graphics(0, 0);
@@ -713,22 +734,22 @@ gameOverScreen.prototype = {
 
         // RankingBox contents
         var rankBox_1 = new Phaser.Rectangle(149, 697, 405, 47);
-        var rankText_1 = game.add.bitmapText(0, 0 , "DungGeunMo", "1,500", 60);
+        var rankText_1 = game.add.bitmapText(0, 0 , "DungGeunMo", ranking[0].toString(), 60);
         rankText_1.alignIn(rankBox_1, Phaser.RIGHT, 0, 0);
         rankText_1.tint = 0x3C1E1E;
 
         var rankBox_2 = new Phaser.Rectangle(149, 744, 405, 47);
-        var rankText_2 = game.add.bitmapText(0, 0 , "DungGeunMo", "600", 60);
+        var rankText_2 = game.add.bitmapText(0, 0 , "DungGeunMo", ranking[1].toString(), 60);
         rankText_2.alignIn(rankBox_2, Phaser.RIGHT, 0, 0);
         rankText_2.tint = 0x3C1E1E;
 
         var rankBox_3 = new Phaser.Rectangle(149, 791, 405, 47);
-        var rankText_3 = game.add.bitmapText(0, 0 , "DungGeunMo", "71", 60);
+        var rankText_3 = game.add.bitmapText(0, 0 , "DungGeunMo", ranking[2].toString(), 60);
         rankText_3.alignIn(rankBox_3, Phaser.RIGHT, 0, 0);
         rankText_3.tint = 0x3C1E1E;
 
         var rankBox_4 = new Phaser.Rectangle(149, 838, 405, 47);
-        var rankText_4 = game.add.bitmapText(0, 0 , "DungGeunMo", "15", 60);
+        var rankText_4 = game.add.bitmapText(0, 0 , "DungGeunMo", ranking[3].toString(), 60);
         rankText_4.alignIn(rankBox_4, Phaser.RIGHT, 0, 0);
         rankText_4.tint = 0x3C1E1E;
 
@@ -737,18 +758,11 @@ gameOverScreen.prototype = {
     startGame: function(){
         game.state.start("TitleScreen");
     },
-
     sendRequest: function () {
-        httpRequest.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                var o = JSON.parse(this.responseText);
-                bestScore = o.bestScore;
-            }
-        }
-        httpRequest.open('POST', '/data/add');
+        httpRequest.open('POST', '/addScore');
         httpRequest.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-        httpRequest.send('score=' + encodeURIComponent(score));
-    },
+        httpRequest.send('userId=' + user_info.id +'&userScore=' + score);
+    }
 }
 
 
