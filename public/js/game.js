@@ -7,15 +7,12 @@ var score;
 var catnipBombFlag;
 var laneWidth = 238;
 var lineWidth = 3;
-var catTurnSpeed = 200;
-var moveX;
 var angelSide;
 var targetGroup = [];
-var targetDelay = 1300;
+var targetDelay = 800;
 var targetSpeed;
 var targetSpeedCounter = 15;
 var targetPool = [];
-
 var unlockFlagArray = [0, 0, 0];
 
 // added
@@ -84,6 +81,7 @@ preload.prototype = {
         game.load.audio("itemSound", ["assets/sounds/ItemSound.mp3"]);
         game.load.audio("bgm", ["assets/sounds/BGM.mp3"]);
         game.load.audio("gameOver", ["assets/sounds/GameOver.wav"]);
+        game.load.audio("catDead", ["assets/sounds/CatDead.mp3"]);
 
         game.load.image("pauseButton", "assets/sprites/Pause/Pause_Button.png");
         game.load.image("pausePannel", "assets/sprites/Pause/Pause_Pannel.png");
@@ -205,8 +203,8 @@ titleScreen.prototype = {
         }, this);
 
 
-        var bgmIcon = game.add.sprite(game.width/2, game.height/2, "bgmIcon");
-        bgmIcon.scale.set(0.15);
+        var bgmIcon = game.add.sprite(game.width-130, 125, "bgmIcon");
+        bgmIcon.scale.set(0.125);
         var muteBt = game.add.graphics(0, 0);
         muteBt.beginFill(0x000000, 0);
         muteBt.drawCircle(638, 170, 100);
@@ -467,9 +465,12 @@ playGame.prototype = {
         this.targetLoop = game.time.events.loop(targetDelay, function(){
             for(var i = 0; i < 1; i++){
                 if(targetPool.length == 0){
-                    var objectPercentage = game.rnd.between(0,10)
+                    var objectPercentage = game.rnd.between(0,9)
                     var attr;
-                    if((objectPercentage >= 0) && (objectPercentage < 2)){
+                    if((selectedCat == 3)  && (score%10 == 0)){
+                        attr = catnips[3];
+                    }
+                    else if((objectPercentage >= 0) && (objectPercentage < 2)){
                         var itemPercentage = game.rnd.between(0,2);
                         if(itemPercentage == 0){
                             attr = items[2];
@@ -478,23 +479,20 @@ playGame.prototype = {
                             attr = items[0];
                         }
                         else{
-                            
+                            if(selectedCat){
+                                attr = items[1];
+                            }
                         }
                     }
                     else{
                         var catnipPercentage = game.rnd.between(0,999);
                         if((catnipPercentage >= 0) && (catnipPercentage <= 100)){
-                            attr = catnips[2];
-                        }
-                        else if((catnipPercentage >= 101) && (catnipPercentage <= 600)){
-                            attr = catnips[1];
-                        }
-                        else if((catnipPercentage >= 601) && (catnipPercentage <= 900)){
                             attr = catnips[0];
                         }
-                        else{
-                            attr = catnips[3];
+                        else if((catnipPercentage >= 701) && (catnipPercentage <= 999)){
+                            attr = catnips[2];
                         }
+                            attr = catnips[1];
                     }
                     var target = new Target(game, attr);
                     target.scale.setTo(1.5, 1.5);
@@ -516,6 +514,7 @@ playGame.prototype = {
 
     moveLeftCat: function(e){
         game.add.audio("buttonSound").play();
+        var catTurnSpeed = 200;
         if(cat.side != 0){
             cat.side--;
             angelSide = 1;
@@ -538,6 +537,7 @@ playGame.prototype = {
 
     moveRightCat: function(e){
         game.add.audio("buttonSound").play();
+        var catTurnSpeed = 200;
         if(cat.side != 2){    
             cat.side++;
             angelSide = 0;
@@ -562,16 +562,16 @@ playGame.prototype = {
         // Game events
         
         // Class level Up
-        if(score > 30){
+        if(score > 7){
             classSet.frame = 2;
         }
-        if(score > 60){
+        if(score > 15){
             classSet.frame = 3;
         }
-        if(score > 120){
+        if(score > 25){
             classSet.frame = 4;
         }
-        if(score > 240){
+        if(score > 30){
             classSet.frame = 5;
         }
         
@@ -605,6 +605,7 @@ playGame.prototype = {
                 t.destroy();
                 targetSpeedCounter = 4;
                 targetSpeed = 600;
+                targetDelay = 1000;
                 for(var i = 0; i < this.targetGroup.length; i++){
                     this.targetGroup.getChildAt(i).body.velocity.y = targetSpeed;     
                 }
@@ -634,9 +635,12 @@ playGame.prototype = {
 
         // GameOver trigger
         if(!(this.hpBox.scale.x > 0)){
+            game.time.events.add(Phaser.Timer.SECOND * 3, function(){
+                game.add.audio("catDead").play();
+            }, this);
             bgm.destroy();
             this.timeOver(cat);
-        }
+        }  
     },
 
     pause:function(){
@@ -864,7 +868,7 @@ Target = function (game, attr) {
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.attr = attr;
     this.anchor.set(0.5);
-    this.body.velocity.y = targetSpeed*(1.5);
+    this.body.velocity.y = targetSpeed;
 };
 
 Target.prototype = Object.create(Phaser.Sprite.prototype);
