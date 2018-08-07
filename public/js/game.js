@@ -11,7 +11,7 @@ var catTurnSpeed = 200;
 var moveX;
 var angelSide;
 var targetGroup = [];
-var targetDelay = 1300;
+var targetDelay = 600;
 var targetSpeed;
 var targetSpeedCounter = 15;
 var targetPool = [];
@@ -77,7 +77,9 @@ preload.prototype = {
         game.load.setPreloadSprite(loadingBar);
         
         game.load.spritesheet("prologues", "assets/sprites/prologue_sprites.png", 720, 1280, 4);
-        game.load.image("background", "assets/sprites/background/Background_Sprites.png");
+        // game.load.image("background", "assets/sprites/background/Background_Sprites.png");
+        game.load.spritesheet("background", "assets/sprites/background/Background_Sprites.png", 720, 1280, 4);
+
         game.load.image("tutorialFirst", "assets/sprites/tutorial/tutorialFirst.png");
         game.load.image("tutorialSecond", "assets/sprites/tutorial/turorialSecond.png");
         game.load.audio("buttonSound", ["assets/sounds/ButtonSound.mp3"]);
@@ -372,7 +374,7 @@ playGame.prototype = {
         // Initialize
         score = 0;
         healthFlag = 1;
-        targetSpeed = 300;
+        targetSpeed = 1200;
 
         // ItemPool        
         targetPool = [];
@@ -396,28 +398,29 @@ playGame.prototype = {
         this.targetGroup = game.add.group();
         this.scoreText = game.add.bitmapText(110, 0, "DungGeunMo", "0", 90);
         
+        
         // HP Configuration
-        var hpBoxBg = game.add.graphics(174, 120);
-        hpBoxBg.beginFill(0xffffff, 1);
-        hpBoxBg.drawRect(0, 0, 520, 30);
+        var hpBoxBg = game.add.graphics(200, 120);
+        hpBoxBg.beginFill(0x000000, 1);
+        hpBoxBg.drawRect(0, 0, 481, 30);
         hpBoxBg.endFill();
         //hpBoxBg.anchor.setTo(0, 0.5);
 
-        this.hpBox = game.add.graphics(174, 120);
+        this.hpBox = game.add.graphics(200, 120);
         var hpBox = this.hpBox;
         this.hpBox.scale.x = 1;
         hpBox.beginFill(0xff0000, 1);
-        hpBox.drawRect(0, 0, 520, 30);
+        hpBox.drawRect(0, 0, 481, 30);
         hpBox.endFill();
-        //hpBox.anchor.setTo(0, 0.5);
+        hpBox.anchor.setTo(0, 0.5);
 
         var sprite = game.add.sprite(0, 0, "hpBar").anchor.set.y = 0.9;
 
         // Cat ability base
-        this.speedRate = 15000;
+        this.speedRate = 25000;
 
         if(selectedCat === 2){  // StrongCat ablility
-            this.speedRate = 20000;
+            this.speedRate = 30000;
         }
 
 
@@ -484,13 +487,13 @@ playGame.prototype = {
                     else{
                         var catnipPercentage = game.rnd.between(0,999);
                         if((catnipPercentage >= 0) && (catnipPercentage <= 100)){
-                            attr = catnips[2];
+                            attr = catnips[0];
                         }
                         else if((catnipPercentage >= 101) && (catnipPercentage <= 600)){
                             attr = catnips[1];
                         }
                         else if((catnipPercentage >= 601) && (catnipPercentage <= 900)){
-                            attr = catnips[0];
+                            attr = catnips[2];
                         }
                         else{
                             attr = catnips[3];
@@ -576,7 +579,7 @@ playGame.prototype = {
         }
         
         //  Scroll the background
-        background.tilePosition.y += 8;
+        background.tilePosition.y += 30;
         
         // SmokeEmitter
         //cat.smokeEmitter.x = cat.x;
@@ -587,7 +590,9 @@ playGame.prototype = {
             itemSound.play();
             if(t.attr == catnips[0]){
                 t.destroy();
-                score -= 2;
+                if (score >= 2){
+                    score -= 2;
+                }
             }
             else if(t.attr == catnips[1]){
                 t.destroy();
@@ -604,14 +609,16 @@ playGame.prototype = {
             else if(t.attr == items[0]){
                 t.destroy();
                 targetSpeedCounter = 4;
-                targetSpeed = 600;
+                targetSpeed = 1600;
+                targetDelay = 400;
                 for(var i = 0; i < this.targetGroup.length; i++){
                     this.targetGroup.getChildAt(i).body.velocity.y = targetSpeed;     
                 }
                 var timer = setInterval(function(){
                     targetSpeedCounter--;
                     if(targetSpeedCounter == 0){
-                        targetSpeed = 300;
+                        targetSpeed = 1200;
+                        var targetDelay = 600;
                         for(var i = 0; i < this.targetGroup.length; i++){
                             this.targetGroup.getChildAt(i).body.velocity.y = targetSpeed;     
                         }
@@ -626,7 +633,13 @@ playGame.prototype = {
                 t.destroy();
 				++unlockFlagArray[1];
                 this.hpTween.stop(true);
-                game.add.tween(this.hpBox.scale).to( { x: this.hpBox.scale.x + 0.2}, 300, Phaser.Easing.Linear.None, true, 0).onComplete.addOnce(function(){
+                var goal;
+                if(this.hpBox.scale.x > 0.8){
+                    goal = 1;
+                } else {
+                    goal = this.hpBox.scale.x + 0.2;
+                }
+                game.add.tween(this.hpBox.scale).to( { x: goal }, 300, Phaser.Easing.Linear.None, true, 0).onComplete.addOnce(function(){
                     this.hpTween = game.add.tween(this.hpBox.scale).to( { x: 0 }, this.speedRate * this.hpBox.scale.x, Phaser.Easing.Linear.None, true);
                 }, this);
             }
@@ -864,7 +877,7 @@ Target = function (game, attr) {
     game.physics.enable(this, Phaser.Physics.ARCADE);
     this.attr = attr;
     this.anchor.set(0.5);
-    this.body.velocity.y = targetSpeed*(1.5);
+    this.body.velocity.y = targetSpeed;
 };
 
 Target.prototype = Object.create(Phaser.Sprite.prototype);
