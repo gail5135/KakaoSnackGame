@@ -9,7 +9,7 @@ var laneWidth = 238;
 var lineWidth = 3;
 var angelSide;
 var targetGroup = [];
-var targetDelay = 600;
+var targetDelay = 800;
 var targetSpeed;
 var targetPool = [];
 var unlockFlagArray = [0, 0, 0];
@@ -460,31 +460,34 @@ playGame.prototype = {
                     var objectPercentage = game.rnd.between(0,9)
                     var attr;
                     if((selectedCat == 3)  && (score%10 == 0)){
-                        attr = catnips[2];
+                        attr = catnips[3];
                     }
-                    else if((objectPercentage >= 0) && (objectPercentage < 4)){
-                        var itemPercentage = game.rnd.between(0,5);
-                        if((itemPercentage >= 0) && (itemPercentage < 3)){
+                    else if((objectPercentage >= 0) && (objectPercentage < 2)){
+                        var itemPercentage = game.rnd.between(0,2);
+                        if(itemPercentage == 0){
+                            attr = items[2];
+                        }
+                        else if(itemPercentage == 1){
                             attr = items[0];
                         }
                         else if(itemPercentage == 5){
                             attr = items[1];
                         }
                         else{
-                            attr = items[2];
+                            if(selectedCat){
+                                attr = items[1];
+                            }
                         }
                     }
                     else{
-                        var catnipPercentage = game.rnd.between(0,99);
-                        if((catnipPercentage >= 0) && (catnipPercentage <= 9)){
+                        var catnipPercentage = game.rnd.between(0,999);
+                        if((catnipPercentage >= 0) && (catnipPercentage <= 100)){
                             attr = catnips[0];
                         }
-                        else if((catnipPercentage >= 70) && (catnipPercentage <= 99)){
+                        else if((catnipPercentage >= 701) && (catnipPercentage <= 999)){
                             attr = catnips[2];
                         }
-                        else{
                             attr = catnips[1];
-                        }
                     }
                     var target = new Target(game, attr);
                     target.scale.setTo(1.5, 1.5);
@@ -556,16 +559,16 @@ playGame.prototype = {
 
 
         // Class level Up
-        if(score > 10){
+        if(score > 7){
             classSet.frame = 2;
         }
-        if(score > 20){
+        if(score > 15){
             classSet.frame = 3;
         }
-        if(score > 35){
+        if(score > 25){
             classSet.frame = 4;
         }
-        if(score > 50){
+        if(score > 30){
             classSet.frame = 5;
         }
         
@@ -598,11 +601,9 @@ playGame.prototype = {
             }
             else if(t.attr == items[0]){
                 t.destroy();
-                var targetSpeedCounter = 4;
-                targetSpeed = 1600;
-                if(targetDelay != 100){
-                    targetDelay = 400;
-                }
+                targetSpeedCounter = 4;
+                targetSpeed = 600;
+                targetDelay = 1000;
                 for(var i = 0; i < this.targetGroup.length; i++){
                     this.targetGroup.getChildAt(i).body.velocity.y = targetSpeed;     
                 }
@@ -650,11 +651,11 @@ playGame.prototype = {
 
         // GameOver trigger
         if(!(this.hpBox.scale.x > 0)){
-            game.time.events.add(Phaser.Timer.SECOND * 2, function(){
-                var gameOver = game.add.audio("catDead").play();
-                this.timeOver(cat);
+            game.time.events.add(Phaser.Timer.SECOND * 3, function(){
+                game.add.audio("catDead").play();
             }, this);
-            
+            bgm.destroy();
+            this.timeOver(cat);
         }  
     },
 
