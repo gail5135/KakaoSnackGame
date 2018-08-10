@@ -7,15 +7,11 @@ var score;
 var catnipBombFlag;
 var laneWidth = 238;
 var lineWidth = 3;
-var catTurnSpeed = 200;
-var moveX;
 var angelSide;
 var targetGroup = [];
 var targetDelay = 600;
 var targetSpeed;
-var targetSpeedCounter = 15;
 var targetPool = [];
-
 var unlockFlagArray = [0, 0, 0];
 
 // added
@@ -32,7 +28,7 @@ window.onload = function() {
     if(windowRatio < width / height){
         var height = width / windowRatio;
     }
-game = new Phaser.Game(width, height, Phaser.AUTO, "");
+game = new Phaser.Game(width, height, Phaser.WEBGL, "");
     game.state.add("Boot", boot);
     game.state.add("Preload", preload);
     game.state.add("Prologue", prologue);
@@ -77,7 +73,6 @@ preload.prototype = {
         game.load.setPreloadSprite(loadingBar);
         
         game.load.spritesheet("prologues", "assets/sprites/prologue_sprites.png", 720, 1280, 4);
-        // game.load.image("background", "assets/sprites/background/Background_Sprites.png");
         game.load.spritesheet("background", "assets/sprites/background/Background_Sprites.png", 720, 1280, 4);
 
         game.load.image("tutorialFirst", "assets/sprites/tutorial/tutorialFirst.png");
@@ -86,6 +81,7 @@ preload.prototype = {
         game.load.audio("itemSound", ["assets/sounds/ItemSound.mp3"]);
         game.load.audio("bgm", ["assets/sounds/BGM.mp3"]);
         game.load.audio("gameOver", ["assets/sounds/GameOver.wav"]);
+        game.load.audio("catDead", ["assets/sounds/CatDead.mp3"]);
 
         game.load.image("pauseButton", "assets/sprites/Pause/Pause_Button.png");
         game.load.image("pausePannel", "assets/sprites/Pause/Pause_Pannel.png");
@@ -207,8 +203,8 @@ titleScreen.prototype = {
         }, this);
 
 
-        var bgmIcon = game.add.sprite(game.width/2, game.height/2, "bgmIcon");
-        bgmIcon.scale.set(0.15);
+        var bgmIcon = game.add.sprite(game.width-130, 125, "bgmIcon");
+        bgmIcon.scale.set(0.125);
         var muteBt = game.add.graphics(0, 0);
         muteBt.beginFill(0x000000, 0);
         muteBt.drawCircle(638, 170, 100);
@@ -456,47 +452,38 @@ playGame.prototype = {
         game.physics.enable(cat, Phaser.Physics.ARCADE);
         cat.body.allowRotation = false;
         cat.body.moves = false;
-        /*
-        cat.smokeEmitter = game.add.emitter(cat.x, cat.y + cat.height / 2 + 2, 20);
-        cat.smokeEmitter.makeParticles("particle");
-        cat.smokeEmitter.setXSpeed(-15, 15);
-        cat.smokeEmitter.setYSpeed(50, 150);
-        cat.smokeEmitter.setAlpha(0.2, 0.5);
-        cat.smokeEmitter.start(false, 500, 20);
-        */
         this.catGroup.add(cat);
 
         // ItemPool LOOP
         this.targetLoop = game.time.events.loop(targetDelay, function(){
-            for(var i = 0; i < 1; i++){
                 if(targetPool.length == 0){
-                    var objectPercentage = game.rnd.between(0,10)
+                    var objectPercentage = game.rnd.between(0,9)
                     var attr;
-                    if((objectPercentage >= 0) && (objectPercentage < 2)){
-                        var itemPercentage = game.rnd.between(0,2);
-                        if(itemPercentage == 0){
-                            attr = items[2];
-                        }
-                        else if(itemPercentage == 1){
+                    if((selectedCat == 3)  && (score%10 == 0)){
+                        attr = catnips[2];
+                    }
+                    else if((objectPercentage >= 0) && (objectPercentage < 4)){
+                        var itemPercentage = game.rnd.between(0,5);
+                        if((itemPercentage >= 0) && (itemPercentage < 3)){
                             attr = items[0];
                         }
+                        else if(itemPercentage == 5){
+                            attr = items[1];
+                        }
                         else{
-                            
+                            attr = items[2];
                         }
                     }
                     else{
-                        var catnipPercentage = game.rnd.between(0,999);
-                        if((catnipPercentage >= 0) && (catnipPercentage <= 100)){
+                        var catnipPercentage = game.rnd.between(0,99);
+                        if((catnipPercentage >= 0) && (catnipPercentage <= 9)){
                             attr = catnips[0];
                         }
-                        else if((catnipPercentage >= 101) && (catnipPercentage <= 600)){
-                            attr = catnips[1];
-                        }
-                        else if((catnipPercentage >= 601) && (catnipPercentage <= 900)){
+                        else if((catnipPercentage >= 70) && (catnipPercentage <= 99)){
                             attr = catnips[2];
                         }
                         else{
-                            attr = catnips[3];
+                            attr = catnips[1];
                         }
                     }
                     var target = new Target(game, attr);
@@ -508,7 +495,7 @@ playGame.prototype = {
                     var target = targetPool.pop();
                     target.prepareToRevive();
                 }
-            }
+            
         }, this);
 
         // Score LOOP
@@ -519,6 +506,7 @@ playGame.prototype = {
 
     moveLeftCat: function(e){
         game.add.audio("buttonSound").play();
+        var catTurnSpeed = 200;
         if(cat.side != 0){
             cat.side--;
             angelSide = 1;
@@ -541,6 +529,7 @@ playGame.prototype = {
 
     moveRightCat: function(e){
         game.add.audio("buttonSound").play();
+        var catTurnSpeed = 200;
         if(cat.side != 2){    
             cat.side++;
             angelSide = 0;
@@ -564,34 +553,35 @@ playGame.prototype = {
     update: function(){
         // Game events
         
+
+
         // Class level Up
-        if(score > 30){
+        if(score > 10){
             classSet.frame = 2;
         }
-        if(score > 60){
+        if(score > 20){
             classSet.frame = 3;
         }
-        if(score > 120){
+        if(score > 35){
             classSet.frame = 4;
         }
-        if(score > 240){
+        if(score > 50){
             classSet.frame = 5;
         }
         
         //  Scroll the background
         background.tilePosition.y += 30;
-        
-        // SmokeEmitter
-        //cat.smokeEmitter.x = cat.x;
 
         // Drop Item Configuration
         game.physics.arcade.collide(this.catGroup, this.targetGroup, function(c, t){
+            ++unlockFlagArray[2];
             var itemSound = game.add.audio("itemSound");
             itemSound.play();
             if(t.attr == catnips[0]){
                 t.destroy();
-                if (score >= 2){
-                    score -= 2;
+                score -= 2;
+                if (score < 0){
+                    score = 0;
                 }
             }
             else if(t.attr == catnips[1]){
@@ -608,9 +598,11 @@ playGame.prototype = {
             }
             else if(t.attr == items[0]){
                 t.destroy();
-                targetSpeedCounter = 4;
+                var targetSpeedCounter = 4;
                 targetSpeed = 1600;
-                targetDelay = 400;
+                if(targetDelay != 100){
+                    targetDelay = 400;
+                }
                 for(var i = 0; i < this.targetGroup.length; i++){
                     this.targetGroup.getChildAt(i).body.velocity.y = targetSpeed;     
                 }
@@ -618,7 +610,7 @@ playGame.prototype = {
                     targetSpeedCounter--;
                     if(targetSpeedCounter == 0){
                         targetSpeed = 1200;
-                        var targetDelay = 600;
+                        targetDelay = 600;
                         for(var i = 0; i < this.targetGroup.length; i++){
                             this.targetGroup.getChildAt(i).body.velocity.y = targetSpeed;     
                         }
@@ -628,6 +620,17 @@ playGame.prototype = {
             }
             else if(t.attr == items[1]){
                 t.destroy();
+                if(targetDelay != 100){
+                    targetDelay = 100;
+                }
+                var tunaCanCount = 4;
+                var timer = setInterval(function(){
+                    tunaCanCount--;
+                    if(tunaCanCount == 0){
+                        targetDelay = 600;   
+                    }
+                    clearInterval(timer);
+                }, 1000);
             }
             else if(t.attr == items[2]){
                 t.destroy();
@@ -647,9 +650,12 @@ playGame.prototype = {
 
         // GameOver trigger
         if(!(this.hpBox.scale.x > 0)){
-            bgm.destroy();
-            this.timeOver(cat);
-        }
+            game.time.events.add(Phaser.Timer.SECOND * 2, function(){
+                var gameOver = game.add.audio("catDead").play();
+                this.timeOver(cat);
+            }, this);
+            
+        }  
     },
 
     pause:function(){
@@ -664,7 +670,7 @@ playGame.prototype = {
         var restartGame = game.add.graphics(0, 0);
         
         
-        backTitle.beginFill(0xff0000, 1);
+        backTitle.beginFill(0xff0000, 0);
         backTitle.drawCircle(180, 650, 90);
         backTitle.endFill();
         backTitle.inputEnabled = true;
@@ -676,7 +682,7 @@ playGame.prototype = {
             game.state.start("TitleScreen");
         }, this);
 
-        backGame.beginFill(0xff0000, 1);
+        backGame.beginFill(0xff0000, 0);
         backGame.drawCircle(320, 650, 80);
         backGame.endFill();
         backGame.inputEnabled = true;
@@ -690,7 +696,7 @@ playGame.prototype = {
             game.paused = !game.paused;
         }, this);
 
-        restartGame.beginFill(0xff0000, 1);
+        restartGame.beginFill(0xff0000, 0);
         restartGame.drawCircle(460, 650, 80);
         restartGame.endFill();
         restartGame.inputEnabled = true;
@@ -711,12 +717,9 @@ playGame.prototype = {
         }
         
         // TimeOver Events
-        if(score == 222){
-            unlockFlagArray[0] = 222;
+        if(score >= 16){
+            unlockFlagArray[0] = 16;
         }
-
-        // Smoke OFF
-        //c.smokeEmitter.on = false;
 
         // Slow Background
         background.tilePosition.y += 2;
@@ -733,6 +736,7 @@ playGame.prototype = {
             this.targetGroup.getChildAt(i).body.velocity.y = 0;
         }
 
+        /*
         // Explosion animation
         var explosionEmitter = game.add.emitter(c.x, c.y, 200);
         explosionEmitter.makeParticles("particle");
@@ -744,13 +748,14 @@ playGame.prototype = {
         explosionEmitter.forEach(function(p){
             p.tint = c.tint;
         });
+        */
 
         // Cat object destroy
         c.destroy();
 
         // Set time event for GameOverScreen 
         game.time.events.add(Phaser.Timer.SECOND * 2, function(){
-            if((unlockFlagArray[0] == 222) || (unlockFlagArray[1] >= 5) || (unlockFlagArray[2] == 111)){
+            if((unlockFlagArray[0] >= 16) || (unlockFlagArray[1] >= 5) || (unlockFlagArray[2] == 0)){
                 game.state.start("UnlockScreen");
             }
             else{
@@ -765,7 +770,7 @@ unlockScreen.prototype = {
     create: function(){
         var unlockPopUpFlag = 0;
 
-        if(unlockFlagArray[0] == 222){
+        if(unlockFlagArray[0] >= 16 && user_info.lock_1 != 1){
             var nyangGates = game.add.sprite(game.width / 2, game.height / 2, "unlockPopUp_NyangGates");
             nyangGates.anchor.set(0.5);
             nyangGates.inputEnabled = true;
@@ -779,7 +784,7 @@ unlockScreen.prototype = {
                 }
             }, this);
         }
-        if(unlockFlagArray[1] >= 5){
+        if(unlockFlagArray[1] >= 5 && user_info.lock_2 != 1){
             var strongCat = game.add.sprite(game.width / 2, game.height / 2, "unlockPopUp_StrongCat");
             strongCat.anchor.set(0.5);
             strongCat.inputEnabled = true;
@@ -793,7 +798,7 @@ unlockScreen.prototype = {
                 }
             }, this);
         }    
-        if(unlockFlagArray[2] == 111){
+        if(unlockFlagArray[2] == 0 && user_info.lock_3 != 1){
             var rapidCat = game.add.sprite(game.width / 2, game.height / 2, "unlockPopUp_RapidCat");
             rapidCat.anchor.set(0.5);
             rapidCat.inputEnabled = true;
