@@ -19,4 +19,7 @@ html
 			}
 		script(src='js/phaser.min.js')
 		script(src='js/game.js')
+		script(type='text/javascript').
+			var user_info = !{JSON.stringify(user_info)}
+			var ranking = !{JSON.stringify(ranking)}
 	body
