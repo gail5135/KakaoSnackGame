@@ -1,0 +1,20 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		title KingCat - HTML5 game
+
+		meta(name="viewport" content="width=device-width, user-scalable=no")
+	body
+		style.
+			#center { position:absolute; top:50%; left:50%; overflow:hidden; margin-top:-200px; margin-left:-100px; text-align: center;}
+
+		div(id="center")
+			img(src="/assets/images/MainLogo.png" alt="왕냥왕냥")
+			form(action='/' method='post')
+				p
+					input(type='text' name='user' placeholder='username' style='font-size: 30pt; width: 200px; height: 50px')
+				p
+					input(type='submit' value='Play!' style='width: 200px; height: 45px')
+
+			h3 ver 1.0

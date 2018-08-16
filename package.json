@@ -1,7 +1,7 @@
 {
-  "name": "kakaosnackgame",
-  "version": "1.0.0",
-  "description": "kakao HTML5 game",
+  "name": "kingcat_phaser3",
+  "version": "0.0.1",
+  "description": "Kakao html5 game contest entry kingkat phaser3 engine version.",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gail5135/KakaoSnackGame.git"
+    "url": "git+https://github.com/onnoo/KingCat_Phaser3.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/gail5135/KakaoSnackGame/issues"
+    "url": "https://github.com/onnoo/KingCat_Phaser3/issues"
   },
-  "homepage": "https://github.com/gail5135/KakaoSnackGame#readme",
+  "homepage": "https://github.com/onnoo/KingCat_Phaser3#readme",
   "dependencies": {
     "express": "^4.16.3",
     "mysql": "^2.16.0",
