@@ -12,11 +12,14 @@
 |       ├── 3.2.1 실행 환경 세팅
 |       └── 3.2.2 실행
 └── 4.실행 사진
-    ├── 4.1.Login 화면
-    ├── 4.2.Title 화면
-    ├── 4.3.Play 화면
-    ├── 4.4.Pause 화면
-    └── 4.5.GameOver 화면
+    ├── 4.1.Preloader 화면
+    ├── 4.2.Prologue 화면
+    ├── 4.3.MainMenu 화면
+    ├── 4.4.Tutorial 화면
+    ├── 4.5.Select 화면
+    ├── 4.6.Play 화면
+    ├── 4.7.Pause 화면
+    └── 4.8.GameOver 화면
 ```
 
 
@@ -69,14 +72,14 @@
  ![gameOver](./screenshot/selectMenu.png)
  -------------
  
- ### 4.5. Play 화면
+ ### 4.6. Play 화면
  ![gameOver](./screenshot/play.png)
  -------------
  
- ### 4.5. Pause 화면
+ ### 4.7. Pause 화면
  ![gameOver](./screenshot/pause.png)
  -------------
  
-  ### 4.5. GameOver 화면
+  ### 4.8. GameOver 화면
  ![gameOver](./screenshot/gameOver.png)
  -------------
