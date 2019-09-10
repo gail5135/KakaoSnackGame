@@ -60,7 +60,6 @@ var Preloader = new Phaser.Class({
 		this.load.spritesheet('catIcon', 'assets/sprites/catIcon.png', { frameWidth: 40, frameHeight: 38, endFrame: 3 });
 		this.load.spritesheet('catUnlock', 'assets/sprites/catUnlock.png', { frameWidth: 510, frameHeight: 570, endFrame: 2 });
 		this.load.spritesheet('soundButton', 'assets/sprites/soundButton.png', { frameWidth: 72, frameHeight: 72, endFrame: 1 });
-
 	},
 
 	create: function () {
@@ -315,7 +314,8 @@ var GamePlay = new Phaser.Class({
 			game.scene.pause('gameplay');
 			game.scene.run('gamepause');
 			// game.scene.switch('gameplay', 'gamepause');
-		}).bind(this));
+        }).bind(this));
+        
 		leftButton.on('pointerdown', (function (pointer) {
 			buttonSound.play();
 			leftButton.setTint(0xCC6666);
@@ -390,8 +390,7 @@ var GamePlay = new Phaser.Class({
 		// Item
 		var Catnip = new Phaser.Class({
 			Extends: Phaser.GameObjects.Sprite,
-			initialize:
-				function Catnip(scene) {
+			initialize: function Catnip(scene) {
 					Phaser.GameObjects.Sprite.call(this, scene, 0, 0, 'items');
 				},
 			fire: function (x, y, frame) {
