@@ -24,14 +24,15 @@
 
 
 ## 2. 개요
- - **Phaser.js(ver.3)** 로 **3라인 횡스크롤 웹 게임**입니다.
+ - **Phaser.js(ver.3)** 로 개발한 **3라인 횡스크롤 웹 레이싱 게임**입니다.
+ - 제 1회 카카오스낵게임 공모전에 출품하였습니다.
  - This repository is for developing KingCat that kakao HTML5 game contest entry to Phaser3 engine from Phaser2 CE.
 
 
 
 ## 3. 사용법
 ### 3.1. 개발 언어 & 기술
-- Language & Framework : Node.js / Phaser.js(ver.3)
+- Language & Framework : Phaser.js(ver.3) / Node.js
 - DB : MySQL
 
 
