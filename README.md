@@ -32,12 +32,12 @@
  - 제 1회 카카오스낵게임 공모전에 출품하였습니다.
  - This repository is for developing KingCat that kakao HTML5 game contest entry to Phaser3 engine from Phaser2 CE.
 ### 2.2 팀원 소개 
- - 기획) 박예진 (게임 기획 / 작성중...)
+ - 기획: 박예진 (게임 기획 / 작성중...)
    
-   프로그래밍) 양재우 (서버와 DB 개발 / Phaser2에서 Phaser3로 컨버전. https://github.com/onnoo)
-            이해창 (게임 화면, 로직, 알고리즘 구현)
+ - 프로그래밍: 양재우 (서버와 DB 개발 / Phaser2에서 Phaser3로 컨버전. https://github.com/onnoo)
+            이해창 (게임 화면, 로직, 알고리즘 구현 https://github.com/gail5135)
    
-   디자인) 작성중...
+ - 디자인: 작성중...
        
 
 
