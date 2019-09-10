@@ -6,6 +6,8 @@
 .HC_RhythmGame
 ├── 1.목차
 ├── 2.개요
+│   ├── 2.1 게임 설명
+│   └── 2.1 팀원 소개
 ├── 3.사용법
 │   ├── 3.1.개발 언어
 │   └── 3.2.실행 방법
@@ -25,9 +27,16 @@
 
 
 ## 2. 개요
+### 2.1 게임 설명
  - **Phaser.js(ver.3)** 로 개발한 **3라인 횡스크롤 웹 레이싱 게임**입니다.
  - 제 1회 카카오스낵게임 공모전에 출품하였습니다.
  - This repository is for developing KingCat that kakao HTML5 game contest entry to Phaser3 engine from Phaser2 CE.
+### 2.2 팀원 소개 
+ - 기획) 박예진 (게임 기획 / 작성중...)
+   프로그래밍) 양재우 (서버와 DB 개발 / Phaser2에서 Phaser3로 컨버전. https://github.com/onnoo)
+            이해창 (게임 화면, 로직, 알고리즘 구현)
+   디자인) 작성중...
+       
 
 
 
