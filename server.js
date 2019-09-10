@@ -17,7 +17,7 @@ if (app.get('env') === 'development') {
 // CONNECT DB
 var conn = mysql.createConnection({
 	host: "localhost",
-	user: "root",
+	user: "",
 	password: "",
 	database: 'game_data'
 });
