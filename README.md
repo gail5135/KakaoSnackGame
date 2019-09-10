@@ -88,5 +88,5 @@
 
 
 ## 5. 실행 영상
- ![video(./screenshot/video.png)](https://youtu.be/7keAQx0k2ks)
+ [![video](./screenshot/video.png)](https://youtu.be/7keAQx0k2ks)
  -------------
