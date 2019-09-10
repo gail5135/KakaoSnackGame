@@ -7,19 +7,20 @@
 ├── 1.목차
 ├── 2.개요
 ├── 3.사용법
-|   ├── 3.1.개발 언어
-|   └── 3.2.실행 방법
-|       ├── 3.2.1 실행 환경 세팅
-|       └── 3.2.2 실행
-└── 4.실행 사진
-    ├── 4.1.Preloader 화면
-    ├── 4.2.Prologue 화면
-    ├── 4.3.MainMenu 화면
-    ├── 4.4.Tutorial 화면
-    ├── 4.5.Select 화면
-    ├── 4.6.Play 화면
-    ├── 4.7.Pause 화면
-    └── 4.8.GameOver 화면
+│   ├── 3.1.개발 언어
+│   └── 3.2.실행 방법
+│       ├── 3.2.1 실행 환경 세팅
+│       └── 3.2.2 실행
+├── 4.실행 사진
+│   ├── 4.1.Preloader 화면
+│   ├── 4.2.Prologue 화면
+│   ├── 4.3.MainMenu 화면
+│   ├── 4.4.Tutorial 화면
+│   ├── 4.5.Select 화면
+│   ├── 4.6.Play 화면
+│   ├── 4.7.Pause 화면
+│   └── 4.8.GameOver 화면
+└── 5.실행 영상
 ```
 
 
@@ -87,5 +88,5 @@
 
 
 ## 5. 실행 영상
- ![video(http://img.youtube.com/vi/7keAQx0k2ks/0.jpg)](https://youtu.be/7keAQx0k2ks)
+ ![video(./screenshot/video.png)](https://youtu.be/7keAQx0k2ks)
  -------------
