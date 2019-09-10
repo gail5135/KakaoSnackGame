@@ -54,33 +54,38 @@
 
 ## 4. 실행 사진
 ### 4.1. Preloader 화면
- ![login](./screenshot/preloader.png)
+ ![preloader](./screenshot/preloader.png)
  -------------
 
 ### 4.2. Prologue 화면
- ![title](./screenshot/prologue.png)
+ ![prologue](./screenshot/prologue.png)
  -------------
  
 ### 4.3. MainMenu 화면
- ![play](./screenshot/mainMenu.png)
+ ![mainMenu](./screenshot/mainMenu.png)
  -------------
  
 ### 4.4. Tutorial 화면
- ![pause](./screenshot/tutorial.png)
+ ![tutorial](./screenshot/tutorial.png)
  -------------
  
 ### 4.5. Select 화면
- ![gameOver](./screenshot/selectMenu.png)
+ ![selectMenu](./screenshot/selectMenu.png)
  -------------
  
  ### 4.6. Play 화면
- ![gameOver](./screenshot/play.png)
+ ![play](./screenshot/play.png)
  -------------
  
  ### 4.7. Pause 화면
- ![gameOver](./screenshot/pause.png)
+ ![pause](./screenshot/pause.png)
  -------------
  
   ### 4.8. GameOver 화면
  ![gameOver](./screenshot/gameOver.png)
+ -------------
+
+
+## 5. 실행 영상
+ ![video(http://img.youtube.com/vi/7keAQx0k2ks/0.jpg)](https://youtu.be/7keAQx0k2ks)
  -------------
