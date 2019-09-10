@@ -34,11 +34,9 @@
 ### 2.2 팀원 소개 
  - 기획: 박예진 (게임 기획 / 작성중...)
    
- - 프로그래밍: 양재우 (서버와 DB 개발 / Phaser2에서 Phaser3로 컨버전. https://github.com/onnoo)
-            
-            이해창 (게임 화면, 로직, 알고리즘 구현 https://github.com/gail5135)
+ - 프로그래밍: 양재우 (서버와 DB 개발 / Phaser2에서 Phaser3로 컨버전. sweyjw@gmail.com / https://github.com/onnoo)  이해창 (게임 화면, 로직, 알고리즘 구현 / gail5135@gmail.com / https://github.com/gail5135)
    
- - 디자인: 작성중...
+ - 디자인: 작성중
        
 
 
