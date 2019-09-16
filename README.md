@@ -33,7 +33,7 @@
  - This repository is for developing KingCat that kakao HTML5 game contest entry to Phaser3 engine from Phaser2 CE.
 
 ### 2.2 팀원 소개 
-- 총괄)  
+- 총괄+디자인)  
 박예진 (jklf1122@naver.com)
 - 디자인)  
 김아현 (rla-ah74@naver.com)  
