@@ -28,7 +28,7 @@
 
 ## 2. 개요
 ### 2.1 게임 설명
- - **Phaser.js(ver.3)** 로 개발한 **3라인 횡스크롤 웹 레이싱 게임**입니다.
+ - **Phaser.js(ver.3)** 로 개발한 **3라인 종스크롤 웹 레이싱 게임**입니다.
  - 제 1회 카카오스낵게임 공모전에 출품하였습니다.
  - This repository is for developing KingCat that kakao HTML5 game contest entry to Phaser3 engine from Phaser2 CE.
 
